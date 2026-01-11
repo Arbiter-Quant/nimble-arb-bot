@@ -1,4 +1,5 @@
-import { ArrowRight, Circle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const steps = [
   {
@@ -23,7 +24,87 @@ const steps = [
   },
 ];
 
+const triangleStrategies = [
+  {
+    name: "Classic Conversion",
+    flow: "A/B → C/B → A/C",
+    startAsset: "A",
+    orders: ["SELL", "BUY", "BUY"],
+    nodes: ["USDT", "BTC", "FDUSD"],
+    labels: ["SELL A", "BUY C", "BUY A"],
+    description: "Sell A on A/B to get B, use B to Buy C on C/B, use C to Buy A on A/C",
+    colors: ["primary", "success", "warning"],
+  },
+  {
+    name: "Direct Flow",
+    flow: "A/B → B/C → A/C",
+    startAsset: "A",
+    orders: ["SELL", "SELL", "BUY"],
+    nodes: ["FDUSD", "USDT", "BTC"],
+    labels: ["SELL A", "SELL B", "BUY A"],
+    description: "Sell A on A/B to get B, Sell B on B/C to get C, use C to Buy A on A/C",
+    colors: ["primary", "warning", "success"],
+  },
+  {
+    name: "Reverse Flow",
+    flow: "A/B → C/A → C/B",
+    startAsset: "B",
+    orders: ["BUY", "BUY", "SELL"],
+    nodes: ["USDT", "FDUSD", "BTC"],
+    labels: ["BUY A", "BUY C", "SELL C"],
+    description: "Use B to Buy A on A/B, use A to Buy C on C/A, Sell C on C/B to get B",
+    colors: ["success", "primary", "warning"],
+  },
+  {
+    name: "Split Path",
+    flow: "A/B → A/C → C/B",
+    startAsset: "B",
+    orders: ["BUY", "SELL", "SELL"],
+    nodes: ["USDT", "BTC", "FDUSD"],
+    labels: ["BUY A", "SELL A", "SELL C"],
+    description: "Use B to Buy A on A/B, Sell A on A/C to get C, Sell C on C/B to get B",
+    colors: ["success", "warning", "primary"],
+  },
+  {
+    name: "Loopback",
+    flow: "A/B → C/B → C/A",
+    startAsset: "A",
+    orders: ["SELL", "BUY", "SELL"],
+    nodes: ["USDT", "BTC", "FDUSD"],
+    labels: ["SELL A", "BUY C", "SELL C"],
+    description: "Sell A on A/B to get B, use B to Buy C on C/B, Sell C on C/A to get A",
+    colors: ["primary", "success", "warning"],
+  },
+  {
+    name: "Opposing Flow",
+    flow: "A/B → A/C → B/C",
+    startAsset: "B",
+    orders: ["BUY", "SELL", "BUY"],
+    nodes: ["FDUSD", "BTC", "USDT"],
+    labels: ["BUY A", "SELL A", "BUY B"],
+    description: "Use B to Buy A on A/B, Sell A on A/C to get C, use C to Buy B on B/C",
+    colors: ["warning", "success", "primary"],
+  },
+];
+
 export const HowItWorksSection = () => {
+  const [currentStrategy, setCurrentStrategy] = useState(0);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setCurrentStrategy((prev) => (prev + 1) % triangleStrategies.length);
+        setIsAnimating(false);
+      }, 300);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const strategy = triangleStrategies[currentStrategy];
+
   return (
     <section className="py-24 relative bg-card/30">
       <div className="container mx-auto px-4">
@@ -41,7 +122,43 @@ export const HowItWorksSection = () => {
 
         {/* Triangle Visualization */}
         <div className="max-w-lg mx-auto mb-16">
-          <div className="relative aspect-square">
+          {/* Strategy Indicator */}
+          <div className="flex justify-center gap-2 mb-6">
+            {triangleStrategies.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentStrategy(index)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === currentStrategy 
+                    ? "bg-primary w-6" 
+                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Strategy Info */}
+          <div className={`text-center mb-6 transition-all duration-300 ${isAnimating ? "opacity-0 transform -translate-y-2" : "opacity-100 transform translate-y-0"}`}>
+            <span className="text-xs font-mono text-muted-foreground">STRATEGY {currentStrategy + 1}/6</span>
+            <h3 className="text-xl font-bold text-foreground mt-1">{strategy.name}</h3>
+            <p className="text-sm font-mono text-primary mt-1">{strategy.flow}</p>
+            <div className="flex justify-center gap-2 mt-2">
+              {strategy.orders.map((order, i) => (
+                <span 
+                  key={i} 
+                  className={`text-xs px-2 py-0.5 rounded font-mono ${
+                    order === "BUY" 
+                      ? "bg-success/20 text-success" 
+                      : "bg-destructive/20 text-destructive"
+                  }`}
+                >
+                  {order}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className={`relative aspect-square transition-all duration-300 ${isAnimating ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}>
             {/* Triangle SVG */}
             <svg viewBox="0 0 400 346" className="w-full h-full">
               {/* Triangle Path */}
@@ -63,29 +180,57 @@ export const HowItWorksSection = () => {
                 className="animate-[draw_3s_ease-in-out_infinite]"
               />
 
-              {/* Gradient Definition */}
+              {/* Arrow indicators on edges */}
               <defs>
                 <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="hsl(var(--primary))" />
                   <stop offset="50%" stopColor="hsl(var(--success))" />
                   <stop offset="100%" stopColor="hsl(var(--primary))" />
                 </linearGradient>
+                <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                  <polygon points="0 0, 10 3.5, 0 7" fill="hsl(var(--primary))" />
+                </marker>
               </defs>
 
+              {/* Animated arrows on each edge */}
+              <g className="animate-pulse">
+                {/* Top to Right */}
+                <line x1="260" y1="140" x2="280" y2="175" stroke="hsl(var(--primary))" strokeWidth="2" markerEnd="url(#arrowhead)" />
+                {/* Right to Left */}
+                <line x1="220" y1="320" x2="180" y2="320" stroke="hsl(var(--success))" strokeWidth="2" markerEnd="url(#arrowhead)" />
+                {/* Left to Top */}
+                <line x1="100" y1="200" x2="120" y2="160" stroke="hsl(var(--warning))" strokeWidth="2" markerEnd="url(#arrowhead)" />
+              </g>
+
               {/* Nodes */}
-              <circle cx="200" cy="30" r="24" fill="hsl(var(--card))" stroke="hsl(var(--primary))" strokeWidth="2" />
-              <circle cx="370" cy="320" r="24" fill="hsl(var(--card))" stroke="hsl(var(--success))" strokeWidth="2" />
-              <circle cx="30" cy="320" r="24" fill="hsl(var(--card))" stroke="hsl(var(--warning))" strokeWidth="2" />
+              <circle cx="200" cy="30" r="28" fill="hsl(var(--card))" stroke={`hsl(var(--${strategy.colors[0]}))`} strokeWidth="3" />
+              <circle cx="370" cy="320" r="28" fill="hsl(var(--card))" stroke={`hsl(var(--${strategy.colors[1]}))`} strokeWidth="3" />
+              <circle cx="30" cy="320" r="28" fill="hsl(var(--card))" stroke={`hsl(var(--${strategy.colors[2]}))`} strokeWidth="3" />
 
-              {/* Labels */}
-              <text x="200" y="35" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="12" fontFamily="monospace">USDT</text>
-              <text x="370" y="325" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="12" fontFamily="monospace">ETH</text>
-              <text x="30" y="325" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="12" fontFamily="monospace">BTC</text>
+              {/* Node Labels */}
+              <text x="200" y="35" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="11" fontFamily="monospace" fontWeight="bold">{strategy.nodes[0]}</text>
+              <text x="370" y="325" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="11" fontFamily="monospace" fontWeight="bold">{strategy.nodes[1]}</text>
+              <text x="30" y="325" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="11" fontFamily="monospace" fontWeight="bold">{strategy.nodes[2]}</text>
 
-              {/* Arrow Labels */}
-              <text x="290" y="150" fill="hsl(var(--muted-foreground))" fontSize="10" fontFamily="monospace">BUY ETH</text>
-              <text x="200" y="350" textAnchor="middle" fill="hsl(var(--muted-foreground))" fontSize="10" fontFamily="monospace">SELL ETH/BTC</text>
-              <text x="90" y="150" fill="hsl(var(--muted-foreground))" fontSize="10" fontFamily="monospace">SELL BTC</text>
+              {/* Edge Labels with order type */}
+              <g>
+                <rect x="255" y="130" width="60" height="20" rx="4" fill="hsl(var(--card))" stroke="hsl(var(--border))" />
+                <text x="285" y="144" textAnchor="middle" fill="hsl(var(--muted-foreground))" fontSize="9" fontFamily="monospace">{strategy.labels[0]}</text>
+              </g>
+              <g>
+                <rect x="170" y="335" width="60" height="20" rx="4" fill="hsl(var(--card))" stroke="hsl(var(--border))" />
+                <text x="200" y="349" textAnchor="middle" fill="hsl(var(--muted-foreground))" fontSize="9" fontFamily="monospace">{strategy.labels[1]}</text>
+              </g>
+              <g>
+                <rect x="55" y="160" width="60" height="20" rx="4" fill="hsl(var(--card))" stroke="hsl(var(--border))" />
+                <text x="85" y="174" textAnchor="middle" fill="hsl(var(--muted-foreground))" fontSize="9" fontFamily="monospace">{strategy.labels[2]}</text>
+              </g>
+
+              {/* Start indicator */}
+              <g className="animate-pulse">
+                <circle cx="200" cy="30" r="36" fill="none" stroke="hsl(var(--primary))" strokeWidth="1" strokeDasharray="4 4" opacity="0.5" />
+                <text x="200" y="-5" textAnchor="middle" fill="hsl(var(--primary))" fontSize="8" fontFamily="monospace">START</text>
+              </g>
             </svg>
 
             <style>{`
@@ -96,6 +241,11 @@ export const HowItWorksSection = () => {
               }
             `}</style>
           </div>
+
+          {/* Strategy Description */}
+          <p className={`text-center text-xs text-muted-foreground mt-4 font-mono transition-all duration-300 ${isAnimating ? "opacity-0" : "opacity-100"}`}>
+            {strategy.description}
+          </p>
         </div>
 
         {/* Steps */}
