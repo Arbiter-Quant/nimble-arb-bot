@@ -1,4 +1,50 @@
-import { ArrowRight, Circle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+
+const triangleStrategies = [
+  {
+    name: "Classic Conversion",
+    flow: "A/B → C/B → A/C",
+    orders: ["SELL", "BUY", "BUY"],
+    tokens: ["BTC", "USDT", "FDUSD"],
+    description: "Sell A for B, Buy C with B, Buy A with C",
+  },
+  {
+    name: "Direct Flow",
+    flow: "A/B → B/C → A/C",
+    orders: ["SELL", "SELL", "BUY"],
+    tokens: ["BTC", "FDUSD", "USDT"],
+    description: "Sell A for B, Sell B for C, Buy A with C",
+  },
+  {
+    name: "Reverse Flow",
+    flow: "A/B → C/A → C/B",
+    orders: ["BUY", "BUY", "SELL"],
+    tokens: ["FDUSD", "USDT", "BTC"],
+    description: "Buy A with B, Buy C with A, Sell C for B",
+  },
+  {
+    name: "Split Path",
+    flow: "A/B → A/C → C/B",
+    orders: ["BUY", "SELL", "SELL"],
+    tokens: ["BTC", "USDT", "FDUSD"],
+    description: "Buy A with B, Sell A for C, Sell C for B",
+  },
+  {
+    name: "Loopback",
+    flow: "A/B → C/B → C/A",
+    orders: ["SELL", "BUY", "SELL"],
+    tokens: ["FDUSD", "USDT", "BTC"],
+    description: "Sell A for B, Buy C with B, Sell C for A",
+  },
+  {
+    name: "Opposing Flow",
+    flow: "A/B → A/C → B/C",
+    orders: ["BUY", "SELL", "BUY"],
+    tokens: ["BTC", "FDUSD", "USDT"],
+    description: "Buy A with B, Sell A for C, Buy B with C",
+  },
+];
 
 const steps = [
   {
@@ -23,7 +69,28 @@ const steps = [
   },
 ];
 
+const getOrderColor = (order: string) => {
+  return order === "BUY" ? "hsl(var(--success))" : "hsl(var(--destructive))";
+};
+
 export const HowItWorksSection = () => {
+  const [currentStrategy, setCurrentStrategy] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsTransitioning(true);
+      setTimeout(() => {
+        setCurrentStrategy((prev) => (prev + 1) % triangleStrategies.length);
+        setIsTransitioning(false);
+      }, 300);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const strategy = triangleStrategies[currentStrategy];
+
   return (
     <section className="py-24 relative bg-card/30">
       <div className="container mx-auto px-4">
@@ -40,61 +107,165 @@ export const HowItWorksSection = () => {
         </div>
 
         {/* Triangle Visualization */}
-        <div className="max-w-lg mx-auto mb-16">
-          <div className="relative aspect-square">
-            {/* Triangle SVG */}
-            <svg viewBox="0 0 400 346" className="w-full h-full">
-              {/* Triangle Path */}
-              <path
-                d="M200 30 L370 320 L30 320 Z"
-                fill="none"
-                stroke="hsl(var(--border))"
-                strokeWidth="2"
-              />
-              
-              {/* Animated Path */}
-              <path
-                d="M200 30 L370 320 L30 320 Z"
-                fill="none"
-                stroke="url(#gradient)"
-                strokeWidth="3"
-                strokeDasharray="900"
-                strokeDashoffset="900"
-                className="animate-[draw_3s_ease-in-out_infinite]"
-              />
+        <div className="max-w-2xl mx-auto mb-16">
+          {/* Strategy Info */}
+          <div className={`text-center mb-6 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border/50 mb-3">
+              <span className="text-xs font-mono text-muted-foreground">Strategy {currentStrategy + 1}/6</span>
+            </div>
+            <h3 className="text-xl font-semibold text-foreground mb-1">{strategy.name}</h3>
+            <p className="text-sm font-mono text-primary mb-2">{strategy.flow}</p>
+            <p className="text-xs text-muted-foreground">{strategy.description}</p>
+          </div>
 
-              {/* Gradient Definition */}
+          <div className={`relative aspect-square max-w-md mx-auto transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+            {/* Triangle SVG */}
+            <svg viewBox="0 0 400 380" className="w-full h-full">
               <defs>
-                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                {/* Arrow markers for each order type */}
+                <marker id="arrowBuy" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L9,3 z" fill="hsl(var(--success))" />
+                </marker>
+                <marker id="arrowSell" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L9,3 z" fill="hsl(var(--destructive))" />
+                </marker>
+                
+                {/* Gradient for animation */}
+                <linearGradient id="triangleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="hsl(var(--primary))" />
                   <stop offset="50%" stopColor="hsl(var(--success))" />
                   <stop offset="100%" stopColor="hsl(var(--primary))" />
                 </linearGradient>
               </defs>
 
+              {/* Animated background path */}
+              <path
+                d="M200 50 L350 300 L50 300 Z"
+                fill="none"
+                stroke="hsl(var(--border))"
+                strokeWidth="1"
+                opacity="0.3"
+              />
+
+              {/* Leg 1: Top to Right */}
+              <line
+                x1="220" y1="65"
+                x2="335" y2="280"
+                stroke={getOrderColor(strategy.orders[0])}
+                strokeWidth="2"
+                markerEnd={strategy.orders[0] === "BUY" ? "url(#arrowBuy)" : "url(#arrowSell)"}
+              />
+
+              {/* Leg 2: Right to Left */}
+              <line
+                x1="330" y1="310"
+                x2="70" y2="310"
+                stroke={getOrderColor(strategy.orders[1])}
+                strokeWidth="2"
+                markerEnd={strategy.orders[1] === "BUY" ? "url(#arrowBuy)" : "url(#arrowSell)"}
+              />
+
+              {/* Leg 3: Left to Top */}
+              <line
+                x1="65" y1="280"
+                x2="180" y2="65"
+                stroke={getOrderColor(strategy.orders[2])}
+                strokeWidth="2"
+                markerEnd={strategy.orders[2] === "BUY" ? "url(#arrowBuy)" : "url(#arrowSell)"}
+              />
+
               {/* Nodes */}
-              <circle cx="200" cy="30" r="24" fill="hsl(var(--card))" stroke="hsl(var(--primary))" strokeWidth="2" />
-              <circle cx="370" cy="320" r="24" fill="hsl(var(--card))" stroke="hsl(var(--success))" strokeWidth="2" />
-              <circle cx="30" cy="320" r="24" fill="hsl(var(--card))" stroke="hsl(var(--warning))" strokeWidth="2" />
+              <g>
+                {/* Top Node */}
+                <circle cx="200" cy="50" r="28" fill="hsl(var(--card))" stroke="hsl(var(--primary))" strokeWidth="2" />
+                <text x="200" y="54" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="11" fontFamily="monospace" fontWeight="bold">
+                  {strategy.tokens[0]}
+                </text>
+              </g>
+              
+              <g>
+                {/* Right Node */}
+                <circle cx="350" cy="300" r="28" fill="hsl(var(--card))" stroke="hsl(var(--success))" strokeWidth="2" />
+                <text x="350" y="304" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="11" fontFamily="monospace" fontWeight="bold">
+                  {strategy.tokens[1]}
+                </text>
+              </g>
+              
+              <g>
+                {/* Left Node */}
+                <circle cx="50" cy="300" r="28" fill="hsl(var(--card))" stroke="hsl(var(--warning))" strokeWidth="2" />
+                <text x="50" y="304" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="11" fontFamily="monospace" fontWeight="bold">
+                  {strategy.tokens[2]}
+                </text>
+              </g>
 
-              {/* Labels */}
-              <text x="200" y="35" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="12" fontFamily="monospace">USDT</text>
-              <text x="370" y="325" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="12" fontFamily="monospace">ETH</text>
-              <text x="30" y="325" textAnchor="middle" fill="hsl(var(--foreground))" fontSize="12" fontFamily="monospace">BTC</text>
-
-              {/* Arrow Labels */}
-              <text x="290" y="150" fill="hsl(var(--muted-foreground))" fontSize="10" fontFamily="monospace">BUY ETH</text>
-              <text x="200" y="350" textAnchor="middle" fill="hsl(var(--muted-foreground))" fontSize="10" fontFamily="monospace">SELL ETH/BTC</text>
-              <text x="90" y="150" fill="hsl(var(--muted-foreground))" fontSize="10" fontFamily="monospace">SELL BTC</text>
+              {/* Order Labels on edges */}
+              <g>
+                {/* Leg 1 Label */}
+                <rect x="255" y="145" width="45" height="20" rx="4" fill={getOrderColor(strategy.orders[0])} opacity="0.15" />
+                <text x="278" y="159" textAnchor="middle" fill={getOrderColor(strategy.orders[0])} fontSize="10" fontFamily="monospace" fontWeight="bold">
+                  {strategy.orders[0]}
+                </text>
+                <text x="278" y="175" textAnchor="middle" fill="hsl(var(--muted-foreground))" fontSize="8" fontFamily="monospace">
+                  Leg 1
+                </text>
+              </g>
+              
+              <g>
+                {/* Leg 2 Label */}
+                <rect x="177" y="325" width="45" height="20" rx="4" fill={getOrderColor(strategy.orders[1])} opacity="0.15" />
+                <text x="200" y="339" textAnchor="middle" fill={getOrderColor(strategy.orders[1])} fontSize="10" fontFamily="monospace" fontWeight="bold">
+                  {strategy.orders[1]}
+                </text>
+                <text x="200" y="355" textAnchor="middle" fill="hsl(var(--muted-foreground))" fontSize="8" fontFamily="monospace">
+                  Leg 2
+                </text>
+              </g>
+              
+              <g>
+                {/* Leg 3 Label */}
+                <rect x="82" y="145" width="45" height="20" rx="4" fill={getOrderColor(strategy.orders[2])} opacity="0.15" />
+                <text x="105" y="159" textAnchor="middle" fill={getOrderColor(strategy.orders[2])} fontSize="10" fontFamily="monospace" fontWeight="bold">
+                  {strategy.orders[2]}
+                </text>
+                <text x="105" y="175" textAnchor="middle" fill="hsl(var(--muted-foreground))" fontSize="8" fontFamily="monospace">
+                  Leg 3
+                </text>
+              </g>
             </svg>
+          </div>
 
-            <style>{`
-              @keyframes draw {
-                0% { stroke-dashoffset: 900; }
-                50% { stroke-dashoffset: 0; }
-                100% { stroke-dashoffset: -900; }
-              }
-            `}</style>
+          {/* Strategy Indicators */}
+          <div className="flex justify-center gap-2 mt-6">
+            {triangleStrategies.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setIsTransitioning(true);
+                  setTimeout(() => {
+                    setCurrentStrategy(index);
+                    setIsTransitioning(false);
+                  }, 300);
+                }}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  index === currentStrategy
+                    ? "bg-primary w-6"
+                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                }`}
+              />
+            ))}
+          </div>
+
+          {/* Legend */}
+          <div className="flex justify-center gap-6 mt-6">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-success" />
+              <span className="text-xs font-mono text-muted-foreground">BUY</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-destructive" />
+              <span className="text-xs font-mono text-muted-foreground">SELL</span>
+            </div>
           </div>
         </div>
 
