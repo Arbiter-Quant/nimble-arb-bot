@@ -10,8 +10,8 @@ import {
 const features = [
   {
     icon: Zap,
-    title: "Low Latency Execution",
-    description: "WebSocket-based real-time data streaming with ~280ms RTT to Binance servers.",
+    title: "Sub-ms Execution",
+    description: "Internal processing in ~0.3ms. Order validation, preparation and dispatch under 1ms.",
     color: "primary"
   },
   {
