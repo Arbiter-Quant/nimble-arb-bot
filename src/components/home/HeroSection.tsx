@@ -54,10 +54,6 @@ export const HeroSection = () => {
               <span className="font-mono text-foreground">~0.3ms exec</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
-              <Activity className="w-4 h-4 text-primary" />
-              <span className="font-mono text-foreground">~280ms RTT</span>
-            </div>
-            <div className="flex items-center gap-2 text-sm">
               <Shield className="w-4 h-4 text-success" />
               <span className="font-mono text-foreground">Risk Managed</span>
             </div>
@@ -89,14 +85,25 @@ export const HeroSection = () => {
                 <div className="w-3 h-3 rounded-full bg-success/60" />
                 <span className="ml-2 text-xs text-muted-foreground font-mono">arbiter-bot ~ execution.log</span>
               </div>
-              <div className="p-4 font-mono text-xs md:text-sm text-left space-y-1 bg-background/50">
+              <div className="p-4 font-mono text-xs md:text-sm text-left space-y-0.5 bg-background/50 h-[200px] overflow-y-auto">
+                {/* Leg 1 */}
                 <p className="text-muted-foreground">[<span className="text-warning">0.02ms</span>] place check</p>
                 <p className="text-muted-foreground">[<span className="text-warning">0.07ms</span>] place order</p>
-                <p className="text-muted-foreground">[<span className="text-warning">0.26ms</span>] send request <span className="text-muted-foreground/60">← exec time</span></p>
-                <p className="text-success">[<span className="text-primary">282.38ms</span>] place 1 ✓ <span className="text-muted-foreground/60">← network RTT</span></p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.26ms</span>] send request</p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.34ms</span>] sended request</p>
+                <p className="text-success">place 1 ✓</p>
+                {/* Leg 2 */}
                 <p className="text-muted-foreground">[<span className="text-warning">0.04ms</span>] place check</p>
-                <p className="text-success">[<span className="text-primary">282.68ms</span>] place 2 ✓</p>
-                <p className="text-success">[<span className="text-primary">282.43ms</span>] place 3 ✓</p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.25ms</span>] place order</p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.46ms</span>] send request</p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.55ms</span>] sended request</p>
+                <p className="text-success">place 2 ✓</p>
+                {/* Leg 3 */}
+                <p className="text-muted-foreground">[<span className="text-warning">0.05ms</span>] place check</p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.13ms</span>] place order</p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.26ms</span>] send request</p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.32ms</span>] sended request</p>
+                <p className="text-success">place 3 ✓</p>
                 <p className="text-success mt-2">→ Cycle complete: <span className="text-primary">+0.047%</span> profit</p>
               </div>
             </div>
