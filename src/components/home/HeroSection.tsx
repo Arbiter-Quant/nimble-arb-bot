@@ -51,6 +51,10 @@ export const HeroSection = () => {
           <div className="flex flex-wrap justify-center gap-6 mb-10 slide-up" style={{ animationDelay: '0.3s' }}>
             <div className="flex items-center gap-2 text-sm">
               <Zap className="w-4 h-4 text-primary" />
+              <span className="font-mono text-foreground">~0.3ms exec</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm">
+              <Activity className="w-4 h-4 text-primary" />
               <span className="font-mono text-foreground">~280ms RTT</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
@@ -86,11 +90,11 @@ export const HeroSection = () => {
                 <span className="ml-2 text-xs text-muted-foreground font-mono">arbiter-bot ~ execution.log</span>
               </div>
               <div className="p-4 font-mono text-xs md:text-sm text-left space-y-1 bg-background/50">
-                <p className="text-muted-foreground">[<span className="text-primary">0.02ms</span>] place check</p>
-                <p className="text-muted-foreground">[<span className="text-primary">0.07ms</span>] place place order</p>
-                <p className="text-muted-foreground">[<span className="text-primary">0.26ms</span>] place send request</p>
-                <p className="text-success">[<span className="text-primary">282.38ms</span>] place 1 ✓</p>
-                <p className="text-muted-foreground">[<span className="text-primary">0.04ms</span>] place check</p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.02ms</span>] place check</p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.07ms</span>] place order</p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.26ms</span>] send request <span className="text-muted-foreground/60">← exec time</span></p>
+                <p className="text-success">[<span className="text-primary">282.38ms</span>] place 1 ✓ <span className="text-muted-foreground/60">← network RTT</span></p>
+                <p className="text-muted-foreground">[<span className="text-warning">0.04ms</span>] place check</p>
                 <p className="text-success">[<span className="text-primary">282.68ms</span>] place 2 ✓</p>
                 <p className="text-success">[<span className="text-primary">282.43ms</span>] place 3 ✓</p>
                 <p className="text-success mt-2">→ Cycle complete: <span className="text-primary">+0.047%</span> profit</p>
