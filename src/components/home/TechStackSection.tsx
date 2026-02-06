@@ -61,30 +61,6 @@ export const TechStackSection = () => {
           ))}
         </div>
 
-        {/* Code Snippet */}
-        <div className="mt-16 max-w-3xl mx-auto">
-          <div className="glass-card rounded-xl overflow-hidden gradient-border">
-            <div className="flex items-center gap-2 px-4 py-3 bg-card border-b border-border/50">
-              <div className="w-3 h-3 rounded-full bg-destructive/60" />
-              <div className="w-3 h-3 rounded-full bg-warning/60" />
-              <div className="w-3 h-3 rounded-full bg-success/60" />
-              <span className="ml-2 text-xs text-muted-foreground font-mono">src/types/cycle.ts</span>
-            </div>
-            <pre className="p-4 font-mono text-xs md:text-sm overflow-x-auto bg-background/50">
-              <code className="text-muted-foreground">
-{`interface `}<span className="text-primary">TriangularCycle</span>{` {
-  legs: [`}<span className="text-success">TradeLeg</span>{`, `}<span className="text-success">TradeLeg</span>{`, `}<span className="text-success">TradeLeg</span>{`];
-  expectedProfit: `}<span className="text-warning">number</span>{`;
-  executionTime: `}<span className="text-warning">number</span>{`;
-  status: `}<span className="text-primary">'pending'</span>{` | `}<span className="text-primary">'executing'</span>{` | `}<span className="text-success">'complete'</span>{` | `}<span className="text-destructive">'reverted'</span>{`;
-}
-
-const `}<span className="text-primary">legFactor</span>{` = (side: OrderSides, price: number) =>
-  side === OrderSide.BUY ? `}<span className="text-warning">1</span>{` / price : price;`}
-              </code>
-            </pre>
-          </div>
-        </div>
       </div>
     </section>
   );
