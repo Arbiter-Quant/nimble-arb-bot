@@ -1,8 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Zap, Shield, Activity } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useLanguage } from "@/i18n/LanguageContext";
 
 export const HeroSection = () => {
+  const { t } = useLanguage();
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* Background Effects */}
@@ -30,36 +33,35 @@ export const HeroSection = () => {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border/50 mb-8 slide-up">
             <span className="w-2 h-2 rounded-full bg-success pulse-dot" />
             <span className="text-sm font-mono text-muted-foreground">
-              Production Ready • Binance SPOT
+              {t.hero.badge}
             </span>
           </div>
 
           {/* Main Headline */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight slide-up" style={{ animationDelay: '0.1s' }}>
-            High-Frequency
+            {t.hero.title1}
             <br />
-            <span className="gradient-text">Triangular Arbitrage</span>
+            <span className="gradient-text">{t.hero.title2}</span>
           </h1>
 
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 slide-up" style={{ animationDelay: '0.2s' }}>
-            Bot de arbitragem triangular para Binance com execução de baixa latência, 
-            validação de regras e cancelamento ultrarrápido para minimizar perdas.
+            {t.hero.subtitle}
           </p>
 
           {/* Stats */}
           <div className="flex flex-wrap justify-center gap-6 mb-10 slide-up" style={{ animationDelay: '0.3s' }}>
             <div className="flex items-center gap-2 text-sm">
               <Zap className="w-4 h-4 text-primary" />
-              <span className="font-mono text-foreground">~0.3ms exec</span>
+              <span className="font-mono text-foreground">{t.hero.exec}</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
               <Shield className="w-4 h-4 text-success" />
-              <span className="font-mono text-foreground">Risk Managed</span>
+              <span className="font-mono text-foreground">{t.hero.riskManaged}</span>
             </div>
             <div className="flex items-center gap-2 text-sm">
               <Activity className="w-4 h-4 text-warning" />
-              <span className="font-mono text-foreground">Real-time</span>
+              <span className="font-mono text-foreground">{t.hero.realTime}</span>
             </div>
           </div>
 
@@ -67,12 +69,12 @@ export const HeroSection = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 slide-up" style={{ animationDelay: '0.4s' }}>
             <Link to="/demo">
               <Button variant="hero" size="xl" className="group">
-                Try Demo
+                {t.hero.tryDemo}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Button variant="outline" size="xl">
-              View Documentation
+              {t.hero.viewDocs}
             </Button>
           </div>
 
@@ -86,19 +88,16 @@ export const HeroSection = () => {
                 <span className="ml-2 text-xs text-muted-foreground font-mono">arbiter-bot ~ execution.log</span>
               </div>
               <div className="p-4 font-mono text-xs md:text-sm text-left space-y-0.5 bg-background/50 h-[200px] overflow-y-auto">
-                {/* Leg 1 */}
                 <p className="text-muted-foreground">[<span className="text-warning">0.02ms</span>] place check</p>
                 <p className="text-muted-foreground">[<span className="text-warning">0.07ms</span>] place order</p>
                 <p className="text-muted-foreground">[<span className="text-warning">0.26ms</span>] send request</p>
                 <p className="text-muted-foreground">[<span className="text-warning">0.34ms</span>] sended request</p>
                 <p className="text-success">place 1 ✓</p>
-                {/* Leg 2 */}
                 <p className="text-muted-foreground">[<span className="text-warning">0.04ms</span>] place check</p>
                 <p className="text-muted-foreground">[<span className="text-warning">0.25ms</span>] place order</p>
                 <p className="text-muted-foreground">[<span className="text-warning">0.46ms</span>] send request</p>
                 <p className="text-muted-foreground">[<span className="text-warning">0.55ms</span>] sended request</p>
                 <p className="text-success">place 2 ✓</p>
-                {/* Leg 3 */}
                 <p className="text-muted-foreground">[<span className="text-warning">0.05ms</span>] place check</p>
                 <p className="text-muted-foreground">[<span className="text-warning">0.13ms</span>] place order</p>
                 <p className="text-muted-foreground">[<span className="text-warning">0.26ms</span>] send request</p>
@@ -113,7 +112,7 @@ export const HeroSection = () => {
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground">
-        <span className="text-xs font-mono">Scroll</span>
+        <span className="text-xs font-mono">{t.hero.scroll}</span>
         <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/30 flex items-start justify-center p-2">
           <div className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce" />
         </div>

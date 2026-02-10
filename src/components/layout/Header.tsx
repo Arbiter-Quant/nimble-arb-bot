@@ -1,15 +1,36 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Activity, Menu, X } from "lucide-react";
+import { Activity, Menu, X, Globe } from "lucide-react";
 import { useState } from "react";
+import { useLanguage } from "@/i18n/LanguageContext";
+import { Language } from "@/i18n/translations";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+const languageLabels: Record<Language, string> = {
+  en: "EN",
+  pt: "PT",
+  es: "ES",
+};
+
+const languageNames: Record<Language, string> = {
+  en: "English",
+  pt: "Português",
+  es: "Español",
+};
 
 export const Header = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
 
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/demo", label: "Demo" },
+    { href: "/", label: t.nav.home },
+    { href: "/demo", label: t.nav.demo },
   ];
 
   return (
@@ -45,15 +66,37 @@ export const Header = () => {
             ))}
           </nav>
 
-          {/* CTA */}
+          {/* CTA + Language */}
           <div className="hidden md:flex items-center gap-3">
+            {/* Language Selector */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="gap-1.5 font-mono text-xs">
+                  <Globe className="w-4 h-4" />
+                  {languageLabels[language]}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {(Object.keys(languageNames) as Language[]).map((lang) => (
+                  <DropdownMenuItem
+                    key={lang}
+                    onClick={() => setLanguage(lang)}
+                    className={language === lang ? "bg-accent" : ""}
+                  >
+                    <span className="font-mono text-xs mr-2">{languageLabels[lang]}</span>
+                    {languageNames[lang]}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/10 border border-success/30">
               <span className="w-2 h-2 rounded-full bg-success pulse-dot" />
-              <span className="text-xs font-mono text-success">LIVE</span>
+              <span className="text-xs font-mono text-success">{t.nav.live}</span>
             </div>
             <Link to="/demo">
               <Button variant="hero" size="sm">
-                Try Demo
+                {t.nav.tryDemo}
               </Button>
             </Link>
           </div>
@@ -85,9 +128,23 @@ export const Header = () => {
                   </Button>
                 </Link>
               ))}
+              {/* Mobile Language Selector */}
+              <div className="flex gap-1 px-2 py-2">
+                {(Object.keys(languageNames) as Language[]).map((lang) => (
+                  <Button
+                    key={lang}
+                    variant={language === lang ? "secondary" : "ghost"}
+                    size="sm"
+                    className="font-mono text-xs"
+                    onClick={() => setLanguage(lang)}
+                  >
+                    {languageLabels[lang]}
+                  </Button>
+                ))}
+              </div>
               <Link to="/demo" onClick={() => setMobileMenuOpen(false)}>
                 <Button variant="hero" className="w-full mt-2">
-                  Try Demo
+                  {t.nav.tryDemo}
                 </Button>
               </Link>
             </div>
