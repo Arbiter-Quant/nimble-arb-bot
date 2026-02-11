@@ -64,7 +64,7 @@ export const Footer = () => {
             {t.footer.copyright}
           </p>
           <p className="text-xs text-muted-foreground font-mono">
-            RTT: ~280ms • Status: <span className="text-success">Operational</span>
+            Status: <span className="text-success">Operational</span>
           </p>
         </div>
       </div>

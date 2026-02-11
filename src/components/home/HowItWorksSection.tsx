@@ -130,9 +130,9 @@ export const HowItWorksSection = () => {
               </g>
 
               <g>
-                <rect x="255" y="145" width="45" height="20" rx="4" fill={getOrderColor(strategy.orders[0])} opacity="0.15" />
-                <text x="278" y="159" textAnchor="middle" fill={getOrderColor(strategy.orders[0])} fontSize="10" fontFamily="monospace" fontWeight="bold">{strategy.orders[0]}</text>
-                <text x="278" y="175" textAnchor="middle" fill="hsl(var(--muted-foreground))" fontSize="8" fontFamily="monospace">Leg 1</text>
+                <rect x="275" y="145" width="45" height="20" rx="4" fill={getOrderColor(strategy.orders[0])} opacity="0.15" />
+                <text x="298" y="159" textAnchor="middle" fill={getOrderColor(strategy.orders[0])} fontSize="10" fontFamily="monospace" fontWeight="bold">{strategy.orders[0]}</text>
+                <text x="298" y="175" textAnchor="middle" fill="hsl(var(--muted-foreground))" fontSize="8" fontFamily="monospace">Leg 1</text>
               </g>
               <g>
                 <rect x="177" y="325" width="45" height="20" rx="4" fill={getOrderColor(strategy.orders[1])} opacity="0.15" />
