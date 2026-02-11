@@ -44,13 +44,17 @@ export const Footer = () => {
             <h4 className="font-semibold text-foreground mb-4">{t.footer.connect}</h4>
             <div className="flex gap-3">
               <a
-                href="#"
+                href="https://x.com/itisnotsavio"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary/80 transition-all"
               >
                 <Twitter className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="https://github.com/naoeosavio"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-secondary/80 transition-all"
               >
                 <Github className="w-5 h-5" />

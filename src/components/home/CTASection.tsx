@@ -29,10 +29,12 @@ export const CTASection = () => {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Button variant="outline" size="xl">
-              <MessageCircle className="w-5 h-5 mr-2" />
-              {t.cta.contactDM}
-            </Button>
+            <a href="https://x.com/itisnotsavio" target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="xl">
+                <MessageCircle className="w-5 h-5 mr-2" />
+                {t.cta.contactDM}
+              </Button>
+            </a>
           </div>
 
           <p className="text-xs text-muted-foreground mt-6 font-mono">
