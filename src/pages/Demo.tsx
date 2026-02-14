@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ const initialPairs = [
 
 const Demo = () => {
   const [isRunning, setIsRunning] = useState(false);
+  const isRunningRef = useRef(false);
   const [pairs, setPairs] = useState(initialPairs);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [activePairs, setActivePairs] = useState<string[]>([]);
@@ -74,7 +75,7 @@ const Demo = () => {
 
     const runCycle = async () => {
       await new Promise(r => setTimeout(r, 2000 + Math.random() * 3000));
-      if (!isRunning) return;
+      if (!isRunningRef.current) return;
 
       const cycles = [
         { pairs: ["ETH/USDT", "ETH/BTC", "BTC/USDT"], tokens: ["USDT", "ETH", "BTC"] },
@@ -98,7 +99,7 @@ const Demo = () => {
       addLog("Pre-flight checks: PRICE_FILTER ✓ LOT_SIZE ✓ NOTIONAL ✓", "success");
 
       for (let i = 0; i < 3; i++) {
-        if (!isRunning) return;
+        if (!isRunningRef.current) return;
         setLegs(prev => prev.map((leg, idx) => idx === i ? { ...leg, status: "executing" } : leg));
         const latency = 250 + Math.random() * 100;
         addLog(`Executing leg ${i + 1}...`, "info");
@@ -147,7 +148,7 @@ const Demo = () => {
     };
 
     const cycleLoop = async () => {
-      while (isRunning) {
+      while (isRunningRef.current) {
         await runCycle();
       }
     };
@@ -156,11 +157,13 @@ const Demo = () => {
   }, [isRunning, addLog]);
 
   const handleStart = () => {
+    isRunningRef.current = true;
     setIsRunning(true);
     addLog("Bot started in TESTNET mode", "success");
   };
 
   const handleStop = () => {
+    isRunningRef.current = false;
     setIsRunning(false);
     addLog("Bot stopped", "warning");
     setActivePairs([]);
@@ -168,6 +171,7 @@ const Demo = () => {
   };
 
   const handleReset = () => {
+    isRunningRef.current = false;
     setIsRunning(false);
     setLogs([]);
     setActivePairs([]);
