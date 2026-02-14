@@ -101,7 +101,7 @@ const Demo = () => {
       for (let i = 0; i < 3; i++) {
         if (!isRunningRef.current) return;
         setLegs(prev => prev.map((leg, idx) => idx === i ? { ...leg, status: "executing" } : leg));
-        const latency = 250 + Math.random() * 100;
+        const latency = Math.random();
         addLog(`Executing leg ${i + 1}...`, "info");
         await new Promise(r => setTimeout(r, latency));
         
@@ -127,7 +127,7 @@ const Demo = () => {
       }
 
       const profit = (Math.random() - 0.3) * 0.5;
-      const avgLatency = 280 + Math.random() * 50;
+      const avgLatency = Math.random();
       addLog(`Cycle complete: ${profit >= 0 ? "+" : ""}${(profit * 100).toFixed(3)}% (${profit >= 0 ? "HIT" : "MISS"})`, 
         profit >= 0 ? "success" : "warning"
       );
