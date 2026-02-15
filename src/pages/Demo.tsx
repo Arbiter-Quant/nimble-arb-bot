@@ -137,17 +137,42 @@ const Demo = () => {
         profit >= 0 ? "success" : "warning"
       );
 
-      // Update balances based on cycle tokens and profit
+      // Update balances: simulate actual trades through the 3 legs
       setBalances(prev => {
         const updated = { ...prev };
-        const baseToken = cycle.tokens[0]; // e.g. USDT
-        // Add tokens used in cycle if not present
+        // Ensure all tokens exist
         cycle.tokens.forEach(tk => {
           if (!(tk in updated)) updated[tk] = 0;
         });
-        // Apply profit/loss to the base token
-        const profitAmount = (updated[baseToken] || 0) * profit * 0.01;
-        updated[baseToken] = (updated[baseToken] || 0) + profitAmount;
+
+        const [t0, t1, t2] = cycle.tokens; // e.g. USDT, ETH, BTC
+        // Find prices for conversion
+        const getPrice = (sym: string) => pairs.find(p => p.symbol === sym)?.price || 1;
+
+        // Simulate a small trade amount (10% of base token balance)
+        const tradeAmount = (updated[t0] || 0) * 0.1;
+        if (tradeAmount <= 0) return updated;
+
+        // Leg 1: t0 -> t1 (BUY t1 with t0)
+        const p1 = getPrice(`${t1}/${t0}`) || getPrice(`${t0}/${t1}`);
+        const received1 = tradeAmount / p1;
+        updated[t0] -= tradeAmount;
+        updated[t1] += received1;
+
+        // Leg 2: t1 -> t2 (SELL t1 for t2 or BUY t2 with t1)
+        const p2 = getPrice(`${t1}/${t2}`) || (1 / (getPrice(`${t2}/${t1}`) || 1));
+        const received2 = received1 * p2;
+        updated[t1] -= received1;
+        updated[t2] += received2;
+
+        // Leg 3: t2 -> t0 (SELL t2 for t0)
+        const p3 = getPrice(`${t2}/${t0}`) || (1 / (getPrice(`${t0}/${t2}`) || 1));
+        const received3 = received2 * p3;
+        updated[t2] -= received2;
+        // Apply profit factor
+        const profitFactor = 1 + profit * 0.01;
+        updated[t0] += received3 * profitFactor;
+
         return updated;
       });
 
