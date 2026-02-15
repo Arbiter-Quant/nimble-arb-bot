@@ -38,6 +38,11 @@ const Demo = () => {
     avgLatency: 0,
     hitRate: 0,
   });
+  const [balances, setBalances] = useState<Record<string, number>>({
+    USDT: 1000,
+    ETH: 0.3,
+    BTC: 0.01,
+  });
   const { t } = useLanguage();
 
   const addLog = useCallback((message: string, type: LogEntry["type"] = "info", latency?: number) => {
@@ -132,6 +137,20 @@ const Demo = () => {
         profit >= 0 ? "success" : "warning"
       );
 
+      // Update balances based on cycle tokens and profit
+      setBalances(prev => {
+        const updated = { ...prev };
+        const baseToken = cycle.tokens[0]; // e.g. USDT
+        // Add tokens used in cycle if not present
+        cycle.tokens.forEach(tk => {
+          if (!(tk in updated)) updated[tk] = 0;
+        });
+        // Apply profit/loss to the base token
+        const profitAmount = (updated[baseToken] || 0) * profit * 0.01;
+        updated[baseToken] = (updated[baseToken] || 0) + profitAmount;
+        return updated;
+      });
+
       setStats(prev => ({
         ...prev,
         totalCycles: prev.totalCycles + 1,
@@ -177,6 +196,7 @@ const Demo = () => {
     setActivePairs([]);
     setLegs([]);
     setPairs(initialPairs);
+    setBalances({ USDT: 1000, ETH: 0.3, BTC: 0.01 });
     setStats({
       totalCycles: 0,
       successfulCycles: 0,
@@ -258,20 +278,43 @@ const Demo = () => {
               <CycleVisualizer legs={legs} isRunning={isRunning} />
               <div className="glass-card rounded-xl p-4">
                 <h3 className="font-semibold mb-4">{t.demo.simulatedBalance}</h3>
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-secondary/50 rounded-lg p-3 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">USDT</p>
-                    <p className="font-mono font-semibold">1,000.00</p>
-                  </div>
-                  <div className="bg-secondary/50 rounded-lg p-3 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">ETH</p>
-                    <p className="font-mono font-semibold">0.3000</p>
-                  </div>
-                  <div className="bg-secondary/50 rounded-lg p-3 text-center">
-                    <p className="text-xs text-muted-foreground mb-1">BTC</p>
-                    <p className="font-mono font-semibold">0.0100</p>
-                  </div>
-                </div>
+                {(() => {
+                  // Get USDT prices from pairs for conversion
+                  const getUsdtPrice = (token: string): number => {
+                    if (token === "USDT") return 1;
+                    const direct = pairs.find(p => p.symbol === `${token}/USDT`);
+                    if (direct) return direct.price;
+                    // Try via ETH
+                    const toEth = pairs.find(p => p.symbol === `${token}/ETH`);
+                    const ethUsdt = pairs.find(p => p.symbol === "ETH/USDT");
+                    if (toEth && ethUsdt) return toEth.price * ethUsdt.price;
+                    return 0;
+                  };
+                  const totalUsdt = Object.entries(balances).reduce(
+                    (sum, [token, amount]) => sum + amount * getUsdtPrice(token), 0
+                  );
+                  const tokens = Object.entries(balances);
+                  return (
+                    <>
+                      <div className={`grid grid-cols-${Math.min(tokens.length, 3)} gap-3`}>
+                        {tokens.map(([token, amount]) => (
+                          <div key={token} className="bg-secondary/50 rounded-lg p-3 text-center">
+                            <p className="text-xs text-muted-foreground mb-1">{token}</p>
+                            <p className="font-mono font-semibold text-sm">
+                              {amount < 1 ? amount.toFixed(4) : amount.toFixed(2)}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="mt-3 pt-3 border-t border-border/50 flex items-center justify-between">
+                        <span className="text-xs text-muted-foreground">Total (USDT)</span>
+                        <span className="font-mono font-bold text-primary">
+                          ${totalUsdt.toFixed(2)}
+                        </span>
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             </div>
 
