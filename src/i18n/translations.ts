@@ -66,8 +66,8 @@ export const translations = {
       items: [
         { title: "Quick Cancellation", description: "The operation is cancelled after the first leg", result: "Minimal controlled loss (fees only)", advantage: "Preserves capital and avoids completing the cycle at a disadvantage" },
         { title: "Full Cycle with Volume", description: "Three legs executed with small loss", result: "Loses cents per full cycle", advantage: "Generates trading volume to reach VIP levels (lower fees)" },
-        { title: "Positive Residual Balance", description: "Cycle with small USDT loss, but leaves crypto balance", result: "Operational loss offset by residual assets", advantage: "Accumulates small crypto leftovers that appreciate over time" },
-        { title: "Profit + Residual Balance", description: "Cycle with USDT profit AND crypto accumulation", result: "Immediate dollar gain + digital asset increase", advantage: "Double return per operation" },
+        { title: "Positive Residual Balance", description: "Cycle with small target asset loss, but leaves crypto balance", result: "Operational loss offset by residual assets", advantage: "Accumulates small crypto leftovers that appreciate over time" },
+        { title: "Profit + Residual Balance", description: "Cycle with target asset profit AND crypto accumulation", result: "Immediate gain in target asset + digital asset increase", advantage: "Double return per operation" },
       ],
       benefitsTitle: "Strategy Benefits",
       benefits: [
@@ -185,8 +185,8 @@ export const translations = {
       items: [
         { title: "Cancelamento Rápido", description: "A operação é cancelada após a primeira perna", result: "Perda mínima controlada (apenas taxas)", advantage: "Preserva capital e evita completar o ciclo em desvantagem" },
         { title: "Ciclo Completo com Volume", description: "Três pernas executadas com pequena perda", result: "Perde centavos por ciclo completo", advantage: "Gera volume de trading para atingir níveis VIP (taxas menores)" },
-        { title: "Saldo Residual Positivo", description: "Ciclo com pequena perda em USDT, mas deixa saldo em cripto", result: "Prejuízo operacional compensado por ativos residuais", advantage: "Acumula pequenas sobras de criptomoedas que se valorizam ao longo do tempo" },
-        { title: "Lucro + Saldo Residual", description: "Ciclo com lucro em USDT E acúmulo de criptomoeda", result: "Ganho imediato em dólar + acréscimo de ativos digitais", advantage: "Retorno duplo por operação" },
+        { title: "Saldo Residual Positivo", description: "Ciclo com pequena perda no ativo principal, mas deixa saldo em cripto", result: "Prejuízo operacional compensado por ativos residuais", advantage: "Acumula pequenas sobras de criptomoedas que se valorizam ao longo do tempo" },
+        { title: "Lucro + Saldo Residual", description: "Ciclo com lucro no ativo principal E acúmulo de criptomoeda", result: "Ganho imediato no ativo principal + acréscimo de ativos digitais", advantage: "Retorno duplo por operação" },
       ],
       benefitsTitle: "Benefícios da Estratégia",
       benefits: [
@@ -300,8 +300,8 @@ export const translations = {
       items: [
         { title: "Cancelación Rápida", description: "La operación se cancela después de la primera pata", result: "Pérdida mínima controlada (solo comisiones)", advantage: "Preserva capital y evita completar el ciclo en desventaja" },
         { title: "Ciclo Completo con Volumen", description: "Tres patas ejecutadas con pequeña pérdida", result: "Pierde centavos por ciclo completo", advantage: "Genera volumen de trading para alcanzar niveles VIP (menores comisiones)" },
-        { title: "Saldo Residual Positivo", description: "Ciclo con pequeña pérdida en USDT, pero deja saldo en cripto", result: "Pérdida operacional compensada por activos residuales", advantage: "Acumula pequeños restos de criptomonedas que se valorizan con el tiempo" },
-        { title: "Ganancia + Saldo Residual", description: "Ciclo con ganancia en USDT Y acumulación de criptomoneda", result: "Ganancia inmediata en dólar + incremento de activos digitales", advantage: "Retorno doble por operación" },
+        { title: "Saldo Residual Positivo", description: "Ciclo con pequeña pérdida en el activo principal, pero deja saldo en cripto", result: "Pérdida operacional compensada por activos residuales", advantage: "Acumula pequeños restos de criptomonedas que se valorizan con el tiempo" },
+        { title: "Ganancia + Saldo Residual", description: "Ciclo con ganancia en el activo principal Y acumulación de criptomoneda", result: "Ganancia inmediata en el activo principal + incremento de activos digitales", advantage: "Retorno doble por operación" },
       ],
       benefitsTitle: "Beneficios de la Estrategia",
       benefits: [
