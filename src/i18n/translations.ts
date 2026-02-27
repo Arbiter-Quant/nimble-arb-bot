@@ -19,7 +19,7 @@ export const translations = {
       riskManaged: "Risk Managed",
       realTime: "Real-time",
       tryDemo: "Try Demo",
-      viewDocs: "View Documentation",
+      
       scroll: "Scroll",
     },
     // Features
@@ -141,7 +141,7 @@ export const translations = {
       riskManaged: "Risco Gerenciado",
       realTime: "Tempo Real",
       tryDemo: "Testar Demo",
-      viewDocs: "Ver Documentação",
+      
       scroll: "Rolar",
     },
     features: {
@@ -256,7 +256,7 @@ export const translations = {
       riskManaged: "Riesgo Gestionado",
       realTime: "Tiempo Real",
       tryDemo: "Probar Demo",
-      viewDocs: "Ver Documentación",
+      
       scroll: "Desplazar",
     },
     features: {
