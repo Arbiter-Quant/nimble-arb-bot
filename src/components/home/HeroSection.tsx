@@ -73,9 +73,6 @@ export const HeroSection = () => {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <Button variant="outline" size="xl">
-              {t.hero.viewDocs}
-            </Button>
           </div>
 
           {/* Terminal Preview */}
